@@ -22,7 +22,7 @@ Para compilar y ejecutar este proyecto, necesitas tener instalado el **Java Deve
 
 1.  Clona este repositorio en tu máquina local:
     ```bash
-    git clone [https://downgit.evecalm.com/](https://downgit.evecalm.com/)
+    git clone https://github.com/PastFlex1/Examen-POO.git
     ```
 2.  Abre el proyecto en tu IDE preferido.
 3.  Asegúrate de que la estructura de directorios del proyecto coincida con la siguiente:
