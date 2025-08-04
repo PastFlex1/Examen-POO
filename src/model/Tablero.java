@@ -1,16 +1,16 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Random;
 import exceptions.CasillaYaDescubiertaException;
 
-public class Tablero {
+public class Tablero implements Serializable {
     private Casilla[][] casillas;
     private final int FILAS = 10;
     private final int COLUMNAS = 10;
     private final int NUM_MINAS = 10;
 
     public Tablero() {
-        this.casillas = new Casilla[FILAS][COLUMNAS];
         inicializarTablero();
         colocarMinasAleatoriamente();
         calcularNumerosMinasAdyacentes();
@@ -19,7 +19,7 @@ public class Tablero {
     private void inicializarTablero() {
         for (int i = 0; i < FILAS; i++) {
             for (int j = 0; j < COLUMNAS; j++) {
-                casillas[i][j] = new Casilla();
+                casillas[i][j] = new CasillaNumero();
             }
         }
     }
@@ -31,7 +31,7 @@ public class Tablero {
             int fila = rand.nextInt(FILAS);
             int columna = rand.nextInt(COLUMNAS);
             if (!casillas[fila][columna].tieneMina()) {
-                casillas[fila][columna].colocarMina();
+                casillas[fila][columna] = new CasillaMina();
                 minasColocadas++;
             }
         }
@@ -51,7 +51,7 @@ public class Tablero {
                             }
                         }
                     }
-                    casillas[i][j].setNumeroMinasAdyacentes(contador);
+                    ((CasillaNumero) casillas[i][j]).setNumeroMinasAdyacentes(contador);
                 }
             }
         }
@@ -68,7 +68,6 @@ public class Tablero {
         return casillas[fila][columna];
     }
 
-    // Método para descubrir una casilla y sus adyacentes si es vacía.
     public void descubrirCasilla(int fila, int columna) throws CasillaYaDescubiertaException {
         Casilla casilla = getCasilla(fila, columna);
 
@@ -78,16 +77,15 @@ public class Tablero {
 
         casilla.descubrir();
 
-        if (casilla.getNumeroMinasAdyacentes() == 0 && !casilla.tieneMina()) {
+        if (!casilla.tieneMina() && ((CasillaNumero)casilla).getNumeroMinasAdyacentes() == 0) {
             descubrirCasillasVaciasAdyacentes(fila, columna);
         }
     }
 
-    // Lógica para el "revelado en cascada"
     private void descubrirCasillasVaciasAdyacentes(int fila, int columna) {
         for (int di = -1; di <= 1; di++) {
             for (int dj = -1; dj <= 1; dj++) {
-                if (di == 0 && dj == 0) continue; // No descubrir la misma casilla
+                if (di == 0 && dj == 0) continue;
 
                 int nuevaFila = fila + di;
                 int nuevaColumna = columna + dj;
@@ -96,8 +94,8 @@ public class Tablero {
                     Casilla adyacente = casillas[nuevaFila][nuevaColumna];
                     if (!adyacente.estaDescubierta() && !adyacente.tieneMina() && !adyacente.estaMarcada()) {
                         adyacente.descubrir();
-                        if (adyacente.getNumeroMinasAdyacentes() == 0) {
-                            descubrirCasillasVaciasAdyacentes(nuevaFila, nuevaColumna); // Recursividad
+                        if (((CasillaNumero)adyacente).getNumeroMinasAdyacentes() == 0) {
+                            descubrirCasillasVaciasAdyacentes(nuevaFila, nuevaColumna);
                         }
                     }
                 }

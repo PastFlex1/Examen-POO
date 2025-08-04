@@ -1,20 +1,15 @@
 package model;
 
-public class Casilla {
-    private boolean tieneMina;
+import java.io.Serializable;
+
+// Clase base para las casillas. Implementa Serializable para la persistencia.
+public abstract class Casilla implements Serializable {
     private boolean estaDescubierta;
     private boolean estaMarcada;
-    private int numeroMinasAdyacentes;
 
     public Casilla() {
-        this.tieneMina = false;
         this.estaDescubierta = false;
         this.estaMarcada = false;
-        this.numeroMinasAdyacentes = 0;
-    }
-
-    public void colocarMina() {
-        this.tieneMina = true;
     }
 
     public void descubrir() {
@@ -25,11 +20,6 @@ public class Casilla {
         this.estaMarcada = !this.estaMarcada;
     }
 
-    // Getters
-    public boolean tieneMina() {
-        return tieneMina;
-    }
-
     public boolean estaDescubierta() {
         return estaDescubierta;
     }
@@ -38,29 +28,9 @@ public class Casilla {
         return estaMarcada;
     }
 
-    public int getNumeroMinasAdyacentes() {
-        return numeroMinasAdyacentes;
-    }
+    public abstract boolean tieneMina();
 
-    // Setter
-    public void setNumeroMinasAdyacentes(int numero) {
-        this.numeroMinasAdyacentes = numero;
-    }
-
+    // Método abstracto para la representación en String
     @Override
-    public String toString() {
-        if (estaMarcada) {
-            return "F"; // F = Bandera (Flag)
-        }
-        if (!estaDescubierta) {
-            return "#"; // # = Casilla cubierta
-        }
-        if (tieneMina) {
-            return "X"; // X = Mina
-        }
-        if (numeroMinasAdyacentes > 0) {
-            return String.valueOf(numeroMinasAdyacentes);
-        }
-        return " "; // Espacio vacío
-    }
+    public abstract String toString();
 }
