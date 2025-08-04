@@ -11,6 +11,9 @@ public class Tablero implements Serializable {
     private final int NUM_MINAS = 10;
 
     public Tablero() {
+
+        this.casillas = new Casilla[FILAS][COLUMNAS];
+
         inicializarTablero();
         colocarMinasAleatoriamente();
         calcularNumerosMinasAdyacentes();
